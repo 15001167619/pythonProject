@@ -26,7 +26,6 @@ headers = [
 # 高校存储excel
 SCHOOL_EXCEL_PATH = 'E:\school\\school.xlsx'
 
-
 class SpiderChinaSchool:
 
     def __init__(self):
