@@ -67,6 +67,7 @@ class SpiderAbroadSchool:
             abroad_school_url = 'http://kaoshi.edu.sina.com.cn/abroad/list.php?country=' + abroad_school_name + '&type=&zhinanflag=&collegename=&page=1'
             print('页面地址' + abroad_school_url)
             res = requests.get(abroad_school_url, headers=self.header)
+            # 返回网页中文数据乱码
             res.encoding = res.apparent_encoding
             soup = BeautifulSoup(res.text, 'html.parser')
             tables = soup.findAll('table')
