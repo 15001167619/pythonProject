@@ -2,6 +2,7 @@ import requests
 import os
 import random
 import pandas as pd
+import time
 from bs4 import BeautifulSoup
 
 headers = [
@@ -31,6 +32,8 @@ class SpiderAbroadSchool:
     def __init__(self):
         # 请求头 headers
         self.header = {'User-Agent': random.choice(headers)}
+        # 请求间隔时长 interval_time
+        self.interval_time = 10
 
     def _save_excel(self, school_list):
 
@@ -78,6 +81,7 @@ class SpiderAbroadSchool:
             for page_num in range(1, num+1):
                 spider_abroad_school_url = abroad_school_url.replace("1", str(page_num))
                 print('获取第'+str(page_num)+'页' + spider_abroad_school_url)
+                time.sleep(self.interval_time)
                 self._spider_abroad_school_data(spider_abroad_school_url)
 
     def _spider_abroad_school_data(self, spider_abroad_school_url):
