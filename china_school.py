@@ -85,7 +85,7 @@ class SpiderChinaSchool:
         title = soup.title.string
         print(title)
         find = soup.find('div', class_='box-con')
-        if find != None:
+        if find is not None:
             content = find.text
             school = {'校徽': img_url,
                       '学校名称': school_name,
@@ -113,7 +113,7 @@ class SpiderChinaSchool:
             if info is not None:
                 schools_list.append(info)
 
-        self._save_excel(schools_list)
+        # self._save_excel(schools_list)
 
 
 if __name__ == '__main__':
