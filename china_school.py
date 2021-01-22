@@ -26,6 +26,7 @@ headers = [
 # 高校存储excel
 SCHOOL_EXCEL_PATH = 'E:\school\\school.xlsx'
 
+
 class SpiderChinaSchool:
 
     def __init__(self):
@@ -46,7 +47,8 @@ class SpiderChinaSchool:
 
         writer = pd.ExcelWriter(SCHOOL_EXCEL_PATH)
         # columns参数用于指定生成的excel中列的顺序
-        df.to_excel(excel_writer=writer, columns=['校徽', '学校名称', '院校省份', '院校性质', '院校类型', '学历层次', '院校属性', '院校详情'], index=False,
+        df.to_excel(excel_writer=writer, columns=['校徽', '学校名称', '院校省份', '院校性质', '院校类型', '学历层次', '院校属性', '院校详情', '学校简介'],
+                    index=False,
                     encoding='utf-8', sheet_name='Sheet')
         writer.save()
         writer.close()
@@ -56,8 +58,13 @@ class SpiderChinaSchool:
         获取首页高校
         :return:
         """
-        for i in range(10):
-            page_num = i+1
+        # for i in range(85, 280):
+        #     page_num = i
+        #     # self._spider_school(page_num)
+        #     print(page_num)
+
+        for i in range(85, 280):
+            page_num = i
             self._spider_school(page_num)
             time.sleep(self.interval_time)
 
@@ -72,22 +79,30 @@ class SpiderChinaSchool:
         var5 = data[5].text
         var6 = data[6].text.replace('\n', ';').replace('\r', ';')
         var7 = data[7].find_all('a')[0]['href']
+        print(var7)
+        res = requests.get(var7, headers=self.header)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        title = soup.title.string
+        print(title)
+        find = soup.find('div', class_='box-con')
+        if find != None:
+            content = find.text
+            school = {'校徽': img_url,
+                      '学校名称': school_name,
+                      '院校省份': province_name,
+                      '院校性质': var3,
+                      '院校类型': var4,
+                      '学历层次': var5,
+                      '院校属性': var6,
+                      '院校详情': var7,
+                      '学校简介': content}
+            return school
 
-        school = {'校徽': img_url,
-                  '学校名称': school_name,
-                  '院校省份': province_name,
-                  '院校性质': var3,
-                  '院校类型': var4,
-                  '学历层次': var5,
-                  '院校属性': var6,
-                  '院校详情': var7}
-
-        return school
 
     def _spider_school(self, page_num):
         index_url = self.index_url.replace("page", str(page_num))
         # 抓取高校地址
-        print('获取第'+str(page_num)+'页高校地址' + index_url)
+        print('获取第' + str(page_num) + '页高校地址' + index_url)
         res = requests.get(index_url, headers=self.header)
         soup = BeautifulSoup(res.text, 'html.parser')
         # 获取第一页数据
@@ -96,7 +111,9 @@ class SpiderChinaSchool:
         for school_info in soup.find_all('tr'):
             if is_frist != 0:
                 # 添高校数据
-                schools_list.append(self._get_school_info(school_info))
+                info = self._get_school_info(school_info)
+                if info != None:
+                    schools_list.append(info)
 
             is_frist += 1
 

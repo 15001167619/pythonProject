@@ -24,7 +24,7 @@ headers = [
 ]
 
 # 高校存储excel
-SCHOOL_EXCEL_PATH = 'E:\school\\abroad_school.xlsx'
+SCHOOL_EXCEL_PATH = 'E:\school\\abroad_school_temp.xlsx'
 
 
 class SpiderAbroadSchool:
@@ -57,9 +57,7 @@ class SpiderAbroadSchool:
         :return:
         """
 
-        abroad_school_list = ['美国', '加拿大', '英国', '法国', '德国', '澳洲', '澳大利亚',
-                              '韩国', '日本', '马来西亚', '新西兰', '新加坡', '匈牙利', '瑞士', '瑞典', '乌克兰', '希腊', '西班牙', '意大利', '挪威',
-                              '中国香港地区',
+        abroad_school_list = [
                               '奥地利', '爱尔兰', '比利时', '保加利亚', '波兰', '丹麦', '俄罗斯', '芬兰', '荷兰', '葡萄牙', '罗马尼亚', '喀麦隆', '白俄罗斯',
                               '阿尔及利亚', '毛里求斯',
                               '斯里兰卡', '吉尔吉斯斯坦', '拉脱维亚', '列支敦士登', '以色列', '卢森堡', '马耳他', '其他']
@@ -76,12 +74,11 @@ class SpiderAbroadSchool:
             tables = soup.findAll('table')
             # 获取翻页条目数据table
             page = tables[14]
-            num_str = self._table_page_num(page)
+            num_str = 30
             num = int(num_str)
             for page_num in range(1, num+1):
                 spider_abroad_school_url = abroad_school_url.replace("1", str(page_num))
                 print('获取第'+str(page_num)+'页' + spider_abroad_school_url)
-                time.sleep(self.interval_time)
                 self._spider_abroad_school_data(spider_abroad_school_url)
 
     def _spider_abroad_school_data(self, spider_abroad_school_url):
