@@ -106,16 +106,12 @@ class SpiderChinaSchool:
         res = requests.get(index_url, headers=self.header)
         soup = BeautifulSoup(res.text, 'html.parser')
         # 获取第一页数据
-        is_frist = 0
         schools_list = []
-        for school_info in soup.find_all('tr'):
-            if is_frist != 0:
-                # 添高校数据
-                info = self._get_school_info(school_info)
-                if info != None:
-                    schools_list.append(info)
-
-            is_frist += 1
+        for school_info in soup.find_all('tr')[1:]:
+            # 添高校数据
+            info = self._get_school_info(school_info)
+            if info is not None:
+                schools_list.append(info)
 
         self._save_excel(schools_list)
 
